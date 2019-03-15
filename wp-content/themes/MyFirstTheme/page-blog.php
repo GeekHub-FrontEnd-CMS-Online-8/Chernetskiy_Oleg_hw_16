@@ -1,45 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HomeWork16_blog</title>
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="<?php bloginfo('stylesheet_url') ?>">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Roboto+Condensed:300,300i,400,400i,700,700i" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-</head>
-<body>
+<?php get_header(); ?>
 
-<header class="header">
-    <div class="header_wrapper">
-        <input class="header_checkbox" type="checkbox" id="check-menu">
-        <label class="header_label" for="check-menu"></label>
-        <div class="burger-line first"></div>
-        <div class="burger-line second"></div>
-        <div class="burger-line third"></div>
-        <div class="burger-line fourth"></div>
-        <nav class="main-menu header_links">
-            <a href="<?php echo home_url(); ?>">home</a>
-            <a href="portfolio.html">portfolio</a>
-            <a href="blog.html">blog</a>
-            <a href="post.html">post</a>
-        </nav>
-    </div>
-    <div class="header_middle-logo">
-        <a href="<?php echo home_url(); ?>"><img src="<?php bloginfo('template_url') ?>/img/index/square_logo.png" alt="" class="test_logoo"></a>
-    </div>
-    <div class="header_social-links">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fas fa-camera-retro"></i></a>
-        <a href="#"><i class="fab fa-flickr"></i></a>
-        <a href="#"><i class="fab fa-google-plus-g"></i></a>
-        <a href="#"><i class="fas fa-envelope"></i></a>
-    </div>
-</header>
 <section>
     <div class="blog_container">
+
+        <?php $query = new WP_Query( 'cat=3' ); ?>
+
+        <!-- Работающий пример с выбором к-ства постов на странице -->
+        <!--<?php $query = new WP_Query( ['cat'=>3,
+            'posts_per_page' => 6
+        ] ); ?> -->
+
+        <?php if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); ?>
+
+            <div class="blog_item">
+                <?php the_post_thumbnail( 'full' , 'class=blog_item_photo' ); ?>
+                <div class="blog_text-container blog_color1">
+                    <div class="text_text_test">
+                        <h2 class="blog_text-container_title"><?php the_title(); ?></h2>
+                        <?php the_excerpt(); ?>
+                    </div>
+                    <div class="blog_text-container_button">
+                        <a href="<?php the_permalink(); ?>">read more</a>
+                    </div>
+                    <div class="blog_text-container_date">
+                        <p><i class="far fa-calendar"></i> <?php the_date('d.m.Y'); ?></p>
+                        <p><i class="fas fa-comment"></i> 24</p>
+                    </div>
+                </div>
+            </div>
+
+        <?php endwhile;
+            wp_reset_postdata();
+        else : ?>
+            <p><?php esc_html_e( 'Sorry, no posts matched your criteria.' ); ?></p>
+        <?php endif; ?>
+
+        <div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'twentyten' ) ); ?></div>
+        <div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'twentyten' ) ); ?></div>
+
         <div class="blog_item">
             <img src="<?php bloginfo('template_url') ?>/img/blog/your_photo_1.png">
             <div class="blog_text-container blog_color1">
@@ -152,6 +150,7 @@
             </div>
         </div>
     </div>
+    <?php echo get_the_posts_pagination(); ?>
     <div class="blog_bottom-buttons_box">
         <div class="blog_bottom-buttons_item">
             <a href="#">Prev</a>
@@ -176,10 +175,5 @@
         <a href="#"><i class="fas fa-angle-up"></i></a>
     </div>
 </section>
-<footer class="footer">
-    <p>Created by 2ndself.com, with <i class="fas fa-heart"></i><br>
-        exclusive for theuncreativelab.com</p>
-    <p class="footer_rights">&copy; 2014 Square. All Rights Reserved.</p>
-</footer>
-</body>
-</html>
+
+<?php get_footer(); ?>
